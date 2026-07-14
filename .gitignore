@@ -1,0 +1,28 @@
+# Dependencies
+frontend/node_modules/
+backend/node_modules/
+
+# Build
+frontend/dist/
+
+# Temporary files
+backend/temp/
+
+# Environment variables
+frontend/.env
+frontend/.env.*
+backend/.env
+backend/.env.*
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Coverage
+coverage/
