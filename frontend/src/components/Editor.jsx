@@ -15,8 +15,9 @@ const EditorComponent = ({
     const sendCode = async () => {
         setLoading(true);
         try {
+            const API_URL = import.meta.env.VITE_BACKEND_URL;
             const response = await fetch(
-                "http://localhost:3000/generate-test-cases",
+                `${API_URL}/generate-test-cases`,
                 {
                     method: "POST",
                     headers: {
