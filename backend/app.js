@@ -71,30 +71,45 @@ function compile(source, exe) {
 
 function runGenerator(exe, outputFile) {
     return new Promise((resolve, reject) => {
+        console.log("Starting generator:", exe);
         const child = spawn(exe);
+        child.on("spawn", () => {
+            console.log("Generator spawned successfully");
+        });
         const output = fs.createWriteStream(outputFile);
         let stderr = "";
         const timer = setTimeout(() => {
+            console.log("Generator timed out!");
+            console.log("stderr:", stderr);
             child.kill("SIGKILL");
             reject(new Error("Generator timed out."));
-        }, 5000);
+        }, 30000);
         child.stderr.on("data", data => {
             stderr += data.toString();
+            console.log("Generator stderr:", data.toString());
         });
         child.on("error", err => {
             clearTimeout(timer);
+            console.log("Generator process error:", err);
             reject(err);
         });
-        output.on("error", reject);
+        output.on("error", err => {
+            clearTimeout(timer);
+            console.log("Output stream error:", err);
+            reject(err);
+        });
         child.stdout.pipe(output);
         child.on("close", async (code) => {
             clearTimeout(timer);
+            console.log("Generator exited with code:", code);
             try {
                 await finished(output);
+                console.log("Output file written successfully");
                 if (code === 0)
                     resolve();
                 else
                     reject(new Error(stderr || `Generator exited with code ${code}`));
+
             } catch (err) {
                 reject(err);
             }
@@ -104,20 +119,38 @@ function runGenerator(exe, outputFile) {
 
 function runSolution(exe, inputFile, outputFile) {
     return new Promise((resolve, reject) => {
+        console.log("Starting solution:", exe);
+        console.log("Input file:", inputFile);
+        console.log("Output file:", outputFile);
         const child = spawn(exe);
+        child.on("spawn", () => {
+            console.log("Solution spawned successfully");
+        });
         const input = fs.createReadStream(inputFile);
         const output = fs.createWriteStream(outputFile);
         let stderr = "";
         const timer = setTimeout(() => {
+            console.log("Solution timed out!");
+            console.log("stderr:", stderr);
             child.kill("SIGKILL");
             reject(new Error("Solution timed out."));
-        }, 5000);
-        input.on("error", reject);
-        output.on("error", reject);
+        }, 30000);
+        input.on("error", err => {
+            console.log("Input stream error:", err);
+            clearTimeout(timer);
+            reject(err);
+        });
+        output.on("error", err => {
+            console.log("Output stream error:", err);
+            clearTimeout(timer);
+            reject(err);
+        });
         child.stderr.on("data", data => {
             stderr += data.toString();
+            console.log("Solution stderr:", data.toString());
         });
         child.on("error", err => {
+            console.log("Solution process error:", err);
             clearTimeout(timer);
             reject(err);
         });
@@ -125,13 +158,17 @@ function runSolution(exe, inputFile, outputFile) {
         child.stdout.pipe(output);
         child.on("close", async (code) => {
             clearTimeout(timer);
+            console.log("Solution exited with code:", code);
             try {
                 await finished(output);
+                console.log("Output file written successfully");
                 if (code === 0)
                     resolve();
                 else
                     reject(new Error(stderr || `Solution exited with code ${code}`));
+
             } catch (err) {
+                console.log("Finished(output) error:", err);
                 reject(err);
             }
         });
