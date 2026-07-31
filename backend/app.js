@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -7,10 +9,13 @@ const path = require('path');
 const { finished } = require("stream/promises");
 const archiver = require('archiver');
 const {spawn} = require('child_process');
+const aiRoutes = require("./src/routes/aiRoutes");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+app.use("/api/ai",aiRoutes)
 
 app.get('/',(req,res)=>{
     res.send('Hello world')
