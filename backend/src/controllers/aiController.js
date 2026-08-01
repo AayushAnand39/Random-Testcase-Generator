@@ -90,6 +90,14 @@ async function generateGenerator(req, res) {
                     ragContext
                 });
                 await fs.writeFile(cppPath, generatorCode, "utf8");
+            } finally {
+                if (jobDir) {
+                    try {
+                        await fs.rm(jobDir, { recursive: true, force: true });
+                    } catch (cleanupErr) {
+                        console.error("AI temp cleanup failed:", cleanupErr);
+                    }
+                }
             }
         }
 

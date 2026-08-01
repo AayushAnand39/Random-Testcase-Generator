@@ -10,6 +10,7 @@ const { finished } = require("stream/promises");
 const archiver = require('archiver');
 const {spawn} = require('child_process');
 const aiRoutes = require("./src/routes/aiRoutes");
+const { startTempCleanup } = require("./src/utils/tempCleanup");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -290,6 +291,8 @@ app.post('/generate-test-cases',async (req,res)=>{
         }
     }
 })
+
+startTempCleanup();
 
 app.listen(PORT, () => {
     console.log('Server is running on port 3000');

@@ -358,7 +358,7 @@ export default function AIWorkflowPage() {
                     </div>
 
                     <p className="helper-text">
-                      On approval, this will call your existing <code>/generate-test-cases</code> endpoint using the AI-generated generator.
+                      On approval, a zip will be generated containing the input and the output files for you to download.
                     </p>
                   </div>
                 </div>
