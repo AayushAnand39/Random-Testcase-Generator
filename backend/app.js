@@ -61,7 +61,7 @@ function compile(source, exe) {
             console.log("Compilation timeout");
             compiler.kill("SIGKILL");
             reject(new Error("Compilation timed out."));
-        }, 30000);
+        }, 120000);
 
         compiler.on("close", code => {
             clearTimeout(timer);
@@ -89,7 +89,7 @@ function runGenerator(exe, outputFile) {
             console.log("stderr:", stderr);
             child.kill("SIGKILL");
             reject(new Error("Generator timed out."));
-        }, 30000);
+        }, 120000);
         child.stderr.on("data", data => {
             stderr += data.toString();
             console.log("Generator stderr:", data.toString());
@@ -140,7 +140,7 @@ function runSolution(exe, inputFile, outputFile) {
             console.log("stderr:", stderr);
             child.kill("SIGKILL");
             reject(new Error("Solution timed out."));
-        }, 30000);
+        }, 120000);
         input.on("error", err => {
             console.log("Input stream error:", err);
             clearTimeout(timer);
