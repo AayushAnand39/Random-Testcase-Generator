@@ -25,8 +25,7 @@ async function analyze(req, res) {
             });
         }
 
-        const ragContext = ""
-        const analysis = await analyzeProblem({ actualCode, constraints, ragContext });
+        const analysis = await analyzeProblem({ actualCode, constraints });
 
         return res.json({
             success: true,
@@ -52,14 +51,12 @@ async function generateGenerator(req, res) {
             });
         }
 
-        const ragContext = ""
-        const analysis = await analyzeProblem({ actualCode, constraints, ragContext });
+        const analysis = await analyzeProblem({ actualCode, constraints });
 
         let generatorCode = await generateGeneratorCode({
             actualCode,
             constraints,
             analysis,
-            ragContext
         });
 
         const jobDir = makeJobDir();
@@ -85,8 +82,7 @@ async function generateGenerator(req, res) {
                     compilerError: lastError,
                     actualCode,
                     constraints,
-                    analysis,
-                    ragContext
+                    analysis
                 });
                 await fs.writeFile(cppPath, generatorCode, "utf8");
             } finally {
@@ -135,14 +131,12 @@ async function regenerateGenerator(req, res) {
             });
         }
 
-        const ragContext = "";
         const generatorCode = await regenerateGeneratorCode({
             currentCode,
             feedback,
             actualCode,
             constraints,
-            analysis,
-            ragContext
+            analysis
         });
 
         return res.json({
