@@ -9,7 +9,6 @@ const {
 } = require("../services/llmService");
 
 const { compileCpp } = require("../services/cppService");
-const { getRagContext } = require("../services/ragService");
 
 function makeJobDir() {
     return path.join(__dirname, "..", "temp", `ai_${Date.now()}`);
@@ -26,7 +25,7 @@ async function analyze(req, res) {
             });
         }
 
-        const ragContext = await getRagContext(actualCode + "\n" + constraints);
+        const ragContext = ""
         const analysis = await analyzeProblem({ actualCode, constraints, ragContext });
 
         return res.json({
@@ -53,7 +52,7 @@ async function generateGenerator(req, res) {
             });
         }
 
-        const ragContext = await getRagContext(actualCode + "\n" + constraints);
+        const ragContext = ""
         const analysis = await analyzeProblem({ actualCode, constraints, ragContext });
 
         let generatorCode = await generateGeneratorCode({
@@ -136,7 +135,7 @@ async function regenerateGenerator(req, res) {
             });
         }
 
-        const ragContext = await getRagContext(actualCode + "\n" + constraints);
+        const ragContext = "";
         const generatorCode = await regenerateGeneratorCode({
             currentCode,
             feedback,
